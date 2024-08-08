@@ -1,6 +1,7 @@
 const express = require("express");
 const connectDB = require("./config/db");
 const tasks = require("./routes/tasks");
+const users = require("./routes/users");
 
 connectDB();
 const port = process.env.PORT || 3000;
@@ -8,6 +9,7 @@ const app = express();
 
 app.use(express.json());
 app.use("/api/tasks", tasks);
+app.use("/api/users", users)
 
 app.get("/", (req, res) => {
   res.send("Task Manager API");
