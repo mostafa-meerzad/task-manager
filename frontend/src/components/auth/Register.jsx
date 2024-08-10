@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../contenxt/AuthContext";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -11,7 +11,7 @@ const Register = () => {
   });
 
   const { login } = useContext(AuthContext);
-  const history = useHistory();
+  // const history = useHistory();
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.targe.value });
@@ -21,7 +21,7 @@ const Register = () => {
     try {
       const res = await axios.post("localhost:3000/api/users");
       login(res.data.token, res.data.user);
-      history.push("/login");
+      // history.push("/login");
     } catch (error) {
       console.log(error.response.data);
     }

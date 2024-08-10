@@ -1,14 +1,14 @@
 import { useContext, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../../contenxt/AuthContext";
-import {useHistory} from "react-router-dom"
+// import {useHistory} from "react-router-dom"
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const history = useHistory();
+  // const history = useHistory();
   const { login } = useContext(AuthContext);
 
   const handleChange = (e) =>
@@ -20,7 +20,7 @@ const Login = () => {
     try {
       const res = await axios.post("http://localhost:3000/api/auth", formData);
       login(res.data.token, res.data.user);
-      history.push("/");
+      // history.push("/");
     } catch (error) {
       console.log(error.response.data);
     }

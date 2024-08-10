@@ -1,9 +1,31 @@
+import { AuthProvider } from "./contenxt/AuthContext";
+import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import Home from "./pages/Home";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import TasksPage from "./pages/TasksPage";
 const App = () => {
   return (
-    <main className="border-4 ">
-      <h1 >task manager</h1>
+<AuthProvider>
 
-    </main>
+  <Router>
+    <Routes>
+
+      <Route exact path="/" Component={Home}/>
+      <Route exact path="/login" Component={LoginPage}/>
+      <Route exact path="/register" Component={RegisterPage}/>
+      <Route path="/tasks" element={
+        <ProtectedRoute>
+          <TasksPage/>
+        </ProtectedRoute>
+      }/>
+
+    </Routes>
+
+  </Router>
+</AuthProvider>
+
   );
 };
 export default App;
