@@ -35,28 +35,23 @@ router.post(
       const user = await User.findOne({ email });
 
       if (!user) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: "invalid credentials" }] });
+        return res.status(400).json({ error: "invalid credentials" });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: "invalid credentials" }] });
+        return res.status(400).json({ error: "invalid credentials" });
       }
 
       const payload = { user: { id: user.id } };
       jwt.sign(payload, process.env.JWT_SECRET, (err, token) => {
         if (err) throw err;
-        res.json({ token });
+        res.json({ token, user:{"name": user.name, email: user.email} });
       });
     } catch (error) {
-
-        console.log("something went wrong")
-        res.status(500).send("server error")
+      console.log("something went wrong");
+      res.status(500).send("server error");
     }
   }
 );
