@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../contenxt/AuthContext";
+import { Link } from "react-router-dom";
 // import { useHistory } from "react-router-dom";
 
 const Register = () => {
@@ -14,7 +15,7 @@ const Register = () => {
   // const history = useHistory();
 
   const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.targe.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,36 +28,43 @@ const Register = () => {
     }
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <input
-          type="text"
-          name="name"
-          onChange={handleChange}
-          value={formData.name}
-        />
-      </div>
-      <div>
-        <input
-          type="email"
-          name="email"
-          onChange={handleChange}
-          value={formData.email}
-        />
-      </div>
-      <div>
-        <input
-          type="password"
-          name="password"
-          onChange={handleChange}
-          value={formData.password}
-        />
-      </div>
+    <>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="name">name: </label>
+          <input
+            type="text"
+            name="name"
+            onChange={handleChange}
+            value={formData.name}
+          />
+        </div>
+        <div>
+          <label htmlFor="email">email: </label>
+          <input
+            type="email"
+            name="email"
+            onChange={handleChange}
+            value={formData.email}
+          />
+        </div>
+        <div>
+          <label htmlFor="password">password: </label>
+          <input
+            type="password"
+            name="password"
+            onChange={handleChange}
+            value={formData.password}
+          />
+        </div>
 
-      <div>
-        <button type="submit">submit</button>
-      </div>
-    </form>
+        <div>
+          <button type="submit">submit</button>
+        </div>
+      </form>
+      <br />
+      <Link to={"/login"}>login</Link>
+    </>
   );
 };
 export default Register;
