@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
   const [authState, setAuthState] = useState({
     token,
-    isAuthenticated: false,
+    isAuthenticated: !!token,
     user: null,
   });
 

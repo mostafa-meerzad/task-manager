@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../contenxt/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import { useHistory } from "react-router-dom";
 
 const Register = () => {
@@ -13,17 +13,22 @@ const Register = () => {
 
   const { login } = useContext(AuthContext);
   // const history = useHistory();
-
+  const navigate = useNavigate()
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("localhost:3000/api/users");
+      const res = await axios.post("http://localhost:3000/api/users", formData);
       login(res.data.token, res.data.user);
+      console.log(res)
+      console.log(res.data)
+      console.log(res.data.user)
       // history.push("/login");
+      navigate("/")
     } catch (error) {
+      // console.log(error);
       console.log(error.response.data);
     }
   };

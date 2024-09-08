@@ -66,7 +66,7 @@ const Login = () => {
       <br />
       <Link to={"/register"}>sign up</Link>
       <br />
-      {/* <Link to={"/tasks"}>tasks</Link> */}
+      <Link to={"/"}>Home</Link>
       {/* <Navigate to={"/register"} > sign up</Navigate> */}
     </>
   );
