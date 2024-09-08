@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../../contenxt/AuthContext";
 
-const TaskForm = () => {
+const TaskForm = ({update}) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -30,6 +30,7 @@ const TaskForm = () => {
     } catch (error) {
       console.log(error.response);
     }
+    update()
   };
 
   return (
