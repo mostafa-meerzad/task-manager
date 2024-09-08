@@ -2,7 +2,7 @@ const express = require("express");
 const { check, validationResult } = require("express-validator");
 const Task = require("../models/task");
 const auth = require("../middleware/auth");
-
+const User = require("../models/user");
 const router = express.Router();
 
 router.post(
@@ -35,8 +35,15 @@ router.post(
 );
 
 router.get("/", auth, async (req, res) => {
+  // todo
+  // find the users initiating the request
+  // find tasks made by that user
+  // send tasks to the client
   try {
-    const tasks = await Task.find().sort({ date: -1 });
+    const currentUser = await User.find({_id: req.user.id})
+    console.log(currentUser)
+    const tasks = await Task.find({user:currentUser}).sort({ date: -1 });
+    console.log(tasks)
     return res.json(tasks);
   } catch (err) {
     res.status(500).send("Server Error");
