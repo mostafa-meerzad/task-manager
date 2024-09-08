@@ -12,12 +12,13 @@ router.get("/", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
     return res.json(user);
-  } catch (err) {
+  } catch (err) { 
     console.log("something went wrong ", err.message);
     return res.status(500).send("server error");
   }
 });
 
+// this route is for logging-in (email and password) is provided
 router.post(
   "/",
   [

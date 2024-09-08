@@ -6,6 +6,7 @@ const User = require("../models/user");
 
 const router = express.Router();
 
+// sign-up route
 router.post(
   "/",
   [
@@ -41,6 +42,7 @@ router.post(
       const payload = {
         user: { id: user.id },
       };
+      // console.log(payload)
 
       jwt.sign(payload, process.env.JWT_SECRET, (err, token) => {
         if (err) throw err;
