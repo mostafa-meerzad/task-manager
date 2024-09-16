@@ -50,4 +50,61 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
+
+// Update a task
+router.put("/:id", auth, async (req, res) => {
+  const { title } = req.body;
+
+  try {
+    // Find the task by ID
+    let task = await Task.findById(req.params.id);
+
+    // Make sure task exists
+    if (!task) {
+      return res.status(404).json({ msg: "Task not found" });
+    }
+
+    // Make sure the task belongs to the logged-in user
+    if (task.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: "Not authorized" });
+    }
+
+    // Update the task
+    task.title = title || task.title;
+    await task.save();
+
+    res.json(task);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+
+// Delete a task
+router.delete("/:id", auth, async (req, res) => {
+  try {
+    // Find the task by ID
+    let task = await Task.findById(req.params.id);
+
+    // Make sure task exists
+    if (!task) {
+      return res.status(404).json({ msg: "Task not found" });
+    }
+
+    // Make sure the task belongs to the logged-in user
+    if (task.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: "Not authorized" });
+    }
+
+    await task.remove();
+
+    res.json({ msg: "Task removed" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+
 module.exports = router;
