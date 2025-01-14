@@ -1,47 +1,101 @@
-import { useContext, useEffect, useState } from "react";
-import TaskForm from "../components/tasks/TaskForm";
-import TaskList from "../components/tasks/TaskList";
-import { AuthContext } from "../contenxt/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { fetchTasks, createTask, updateTask, deleteTask } from "../api/taskApi";
 
 const TasksPage = () => {
   const [tasks, setTasks] = useState([]);
-  const { authState, logout } = useContext(AuthContext);
+  const [newTask, setNewTask] = useState("");
+  const [editTaskId, setEditTaskId] = useState(null);
+  const [editTaskTitle, setEditTaskTitle] = useState("");
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    const getTasks = async () => {
+      try {
+        const tasksData = await fetchTasks();
+        setTasks(tasksData);
+      } catch (error) {
+        console.error("Error loading tasks:", error);
+      }
+    };
 
-  const fetchTasks = async () => {
-    if (!authState.isAuthenticated) {
-      navigate("/login");
-    }
+    getTasks();
+  }, []);
 
+  const handleAddTask = async (e) => {
+    e.preventDefault();
+    if (newTask.trim() === "") return;
     try {
-      const tasks = await axios.get("http://localhost:3000/api/tasks", {
-        headers: {
-          "x-auth-token": authState.token,
-        },
-      });
-      setTasks(tasks.data);
+      const taskData = { title: newTask };
+      await createTask(taskData);
+      const tasksData = await fetchTasks();
+      setTasks(tasksData);
+      setNewTask("");
     } catch (error) {
-      console.log(error.response.data);
+      console.error("Error adding task:", error);
     }
   };
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+  const handleEditTask = (taskId, title) => {
+    setEditTaskId(taskId);
+    setEditTaskTitle(title);
+  };
+
+  const handleUpdateTask = async (e) => {
+    e.preventDefault();
+    if (editTaskTitle.trim() === "") return;
+    try {
+      await updateTask(editTaskId, { title: editTaskTitle });
+      const tasksData = await fetchTasks();
+      setTasks(tasksData);
+      setEditTaskId(null);
+      setEditTaskTitle("");
+    } catch (error) {
+      console.error("Error updating task:", error);
+    }
+  };
+
+  const handleDeleteTask = async (taskId) => {
+    try {
+      await deleteTask(taskId);
+      const tasksData = await fetchTasks();
+      setTasks(tasksData);
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  };
 
   return (
     <div>
       <h1>Your Tasks</h1>
-      <br />
-      <TaskList tasks={tasks}/>
-      <br />
-      <TaskForm update={fetchTasks}/>
-      <br />
-      <button onClick={() => logout()}>logout</button>
+
+      {/* Task Form */}
+      <form onSubmit={editTaskId ? handleUpdateTask : handleAddTask}>
+        <input
+          type="text"
+          value={editTaskId ? editTaskTitle : newTask}
+          onChange={(e) =>
+            editTaskId
+              ? setEditTaskTitle(e.target.value)
+              : setNewTask(e.target.value)
+          }
+          placeholder={editTaskId ? "Edit Task" : "New Task"}
+        />
+        <button type="submit">{editTaskId ? "Update Task" : "Add Task"}</button>
+      </form>
+
+      {/* Task List */}
+      <ul>
+        {tasks.map((task) => (
+          <li key={task._id}>
+            {task.title}{" "}
+            <button onClick={() => handleEditTask(task._id, task.title)}>
+              Edit
+            </button>{" "}
+            <button onClick={() => handleDeleteTask(task._id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
+
 export default TasksPage;
